@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Request Resources - Nexus</title>
+  <link rel="stylesheet" href="request_resources.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <header>   
+    <img src="logo.png" alt="Nexus Logo" class="logo">
+    <h1>Nexus</h1>
+  </header>
+  <main>
+    <section class="category-section">
+      <h2 style="color:white;">Select Resource Category</h2>
+      <div class="categories">
+        <button class="category-button" id="Food">
+          <img src="food.png" alt="Food">
+          <p>Food</p>
+        </button>
+        <button class="category-button" id="Water">
+          <img src="water.png" alt="Water">
+          <p>Water</p>
+        </button>
+        <button class="category-button" id="Shelter">
+          <img src="Bed.png" alt="Shelter">
+          <p>Shelter</p>
+        </button>
+        <button class="category-button" id="Medical">
+          <img src="Medical Aid.png" alt="Medical Aid">
+          <p>Medical Aid</p>
+        </button>
+      </div>
+    </section>
+    <section class="details-section">
+      <label for="quantity"><h7 style="color:white;">Quantity:</h7></label>
+      <input type="number" id="quantity" name="quantity" min="1" placeholder="Enter quantity" required>
+
+      <label for="urgency"><h7 style="color:white;">Urgency:</h7></label>
+      <select id="urgency" name="urgency" required>
+        <option value="" disabled selected>Select urgency</option>
+        <option value="urgent">Urgent</option>
+        <option value="moderate">Moderate</option>
+        <option value="non-urgent">Non-Urgent</option>
+      </select>
+
+      <label for="name"><h7 style="color:white;">Name:</h7></label>
+      <input type="text" id="name" name="name" placeholder="Enter your name" required>
+
+      <label for="contact"><h7 style="color:white;">Contact Number:</h7></label>
+      <input type="tel" id="contact" name="contact" placeholder="Enter your contact number" required>
+    </section>
+    <button class="submit-button" disabled>Submit Request</button>
+  </main>
+  <footer>
+    <button class="footer-btn" id="home" onclick="location.href='home.html'"><i class="fas fa-home"></i></button>
+    <button class="footer-btn" id="requestResources" onclick="location.href='request_resources.html'"><i class="fas fa-hand-holding-heart"></i></button>
+    <button class="footer-btn" id="realTimeMap" onclick="location.href='real_time_map.html'"><i class="fas fa-map-marked-alt"></i></button>
+    <button class="footer-btn" id="chat" onclick="location.href='group_chat.html'"><i class="fas fa-comments"></i></button>
+    <button class="footer-btn" id="emergencyContact" onclick="location.href='resources.html'"><i class="fas fa-phone-alt"></i></button>
+  </footer>
+
+  <div id="popup-screen" class="popup-screen">
+    <div class="popup-content">
+      <img src="popup_image.jpg" alt="Popup Image" class="popup-image">
+      <p id="popup-message"></p>
+      <button id="close-popup-btn">Close</button>
+    </div>
+  </div>
+
+  <script src="request_resources.js"></script>
+</body>
+</html>

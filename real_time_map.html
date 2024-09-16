@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Resource Map - Nexus</title>
+    <link rel="stylesheet" href="real_time_map.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <img src="logo.png" alt="Nexus Logo" class="logo">
+        <h1>Nexus</h1>
+    </header>
+    <main>
+        <section class="map-container">
+            <iframe id="mapIframe" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d61263.80386609409!2d80.4345186!3d16.323570600000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a4a755cb1787785%3A0x9f7999dd90f1e694!2sGuntur%2C%20Andhra%20Pradesh!5e0!3m2!1sen!2sin!4v1719741929890!5m2!1sen!2sin" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </section>
+        <section class="resource-selection">
+            <div class="resource-buttons">
+                <button class="resource-btn" data-location="guntur">Food</button>
+                <button class="resource-btn" data-location="vijayawada">Water</button>
+                <button class="resource-btn" data-location="mangalagiri">Shelter</button>
+                <button class="resource-btn" data-location="amaravathi">Medical Aid</button>
+            </div>
+        </section>
+    </main>
+   <footer>
+        <button class="footer-btn" id="home" onclick="location.href='home.html'"><i class="fas fa-home"></i></button>
+        <button class="footer-btn" id="requestResources" onclick="location.href='request_resources.html'"><i class="fas fa-hand-holding-heart"></i></button>
+        <button class="footer-btn" id="realTimeMap" onclick="location.href='real_time_map.html'"><i class="fas fa-map-marked-alt"></i></button>
+        <button class="footer-btn" id="chat" onclick="location.href='group_chat.html'"><i class="fas fa-comments"></i></button>
+        <button class="footer-btn" id="emergencyContact" onclick="location.href='resources.html'"><i class="fas fa-phone-alt"></i></button>
+    </footer>
+
+    <script src="real_time_map.js"></script>
+</body>
+</html>

@@ -1,0 +1,1005 @@
+home.html<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home - Nexus</title>
+  <link rel="stylesheet" href="home.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <header>
+    <img src="logo.png" alt="Nexus Logo" class="logo">
+    <h1>Nexus</h1>
+  </header>
+  <main>
+    <section class="alert-red">
+      <div class="alert-banner">
+        <div class="scrolling-text">Evacuate immediately! Floods expected in your area.</div>
+      </div>
+    </section>
+    <button class="sos-btn">SOS</button>
+    <i class="fi fi-sr-home"></i>
+    <section class="critical-needs">
+      <h2>Critical Needs at a Glance</h2>
+      <div class="resource-overview">
+        <div class="resource-tile" data-resource="food">
+          <h3>Food</h3>
+          <div class="resource-icon food-icon"></div>
+          <div class="resource-info">
+            <div class="progress-bar food-progress">
+              <div class="progress" style="width: 100%;"></div>
+            </div>
+            <p>100 Meals Available</p>
+          </div>
+          <button class="action-btn" onclick="requestResource('Food')">Request Now</button>
+        </div>
+        <div class="resource-tile" data-resource="water">
+          <h3>Water</h3>
+          <div class="resource-icon water-icon"></div>
+          <div class="resource-info">
+            <div class="progress-bar water-progress">
+              <div class="progress" style="width: 100%;"></div>
+            </div>
+            <p>100 Liters Available</p>
+          </div>
+          <button class="action-btn" onclick="requestResource('Water')">Request Now</button>
+        </div>
+        <div class="resource-tile" data-resource="shelter">
+          <h3>Shelter</h3>
+          <div class="resource-icon shelter-icon"></div>
+          <div class="resource-info">
+            <div class="progress-bar shelter-progress">
+              <div class="progress" style="width: 90%;"></div>
+            </div>
+            <p>90 Beds Available</p>
+          </div>
+          <button class="action-btn" onclick="requestResource('Shelter')">Request Now</button>
+        </div>
+        <div class="resource-tile" data-resource="medical">
+          <h3>Medical Aid</h3>
+          <div class="resource-icon medical-icon"></div>
+          <div class="resource-info">
+            <div class="progress-bar medical-progress">
+              <div class="progress" style="width: 100%;"></div>
+            </div>
+            <p>100 Medicines Available</p>
+          </div>
+          <button class="action-btn" onclick="requestResource('Medical')">Request Now</button>
+        </div>
+      </div>
+    </section>
+    <section class="hero-donate">
+      <h2>Become a Hero & Donate</h2>
+      <p>Every bit of help counts. Donate today to make a difference.</p>
+      <button class="volunteer-btn" onclick="location.href='volunteer_now.html'">Volunteer Now</button>
+      <button class="donate-btn" onclick="location.href='donate_now.html'">Donate Now</button>
+    </section>
+  </main>
+  <footer>
+    <button class="footer-btn" id="home" onclick="location.href='home.html'"><i class="fas fa-home"></i></button>
+    <button class="footer-btn" id="requestResources" onclick="location.href='request_resources.html'"><i class="fas fa-hand-holding-heart"></i></button>
+    <button class="footer-btn" id="realTimeMap" onclick="location.href='real_time_map.html'"><i class="fas fa-map-marked-alt"></i></button>
+    <button class="footer-btn" id="chat" onclick="location.href='group_chat.html'"><i class="fas fa-comments"></i></button>
+    <button class="footer-btn" id="emergencyContact" onclick="location.href='resources.html'"><i class="fas fa-phone-alt"></i></button>
+  </footer>
+
+  <script src="home.js"></script>
+</body>
+</html>
+
+home.js
+document.addEventListener('DOMContentLoaded', () => {
+  const sosBtn = document.querySelector('.sos-btn');
+  sosBtn.addEventListener('click', () => {
+    startSOSRecording();
+  });
+
+  document.getElementById('requestResources').addEventListener('click', () => {
+    window.location.href = 'request_resources.html';
+  });
+
+  document.getElementById('realTimeMap').addEventListener('click', () => {
+    window.location.href = 'real_time_map.html';
+  });
+
+  document.getElementById('home').addEventListener('click', () => {
+    window.location.href = 'home.html';
+  });
+
+  document.getElementById('chat').addEventListener('click', () => {
+    window.location.href = 'group_chat.html';
+  });
+
+  window.addEventListener('load', () => {
+    const resources = ['Food', 'Water', 'Shelter', 'Medical'];
+
+    resources.forEach(resource => {
+      const currentSupplies = JSON.parse(localStorage.getItem(resource)) || 100;
+      updateResourceTile(resource, currentSupplies);
+    });
+  });
+});
+
+function startSOSRecording() {
+  navigator.geolocation.getCurrentPosition(position => {
+    const { latitude, longitude } = position.coords;
+
+    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+      .then(stream => {
+        const mediaRecorder = new MediaRecorder(stream);
+        const chunks = [];
+
+        mediaRecorder.ondataavailable = e => chunks.push(e.data);
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(chunks, { type: 'video/webm' });
+          const formData = new FormData();
+          formData.append('video', blob);
+          formData.append('latitude', latitude);
+          formData.append('longitude', longitude);
+
+          // Here you would typically send the formData to your server
+          console.log('SOS Recording completed and ready to be sent');
+        };
+
+        mediaRecorder.start();
+        console.log('SOS Recording started');
+
+        // Stop recording after 2 minutes
+        setTimeout(() => {
+          mediaRecorder.stop();
+          stream.getTracks().forEach(track => track.stop());
+          console.log('SOS Recording stopped after 2 minutes');
+        }, 120000);
+      })
+      .catch(error => console.error('Error accessing media devices:', error));
+  }, error => console.error('Error getting location:', error));
+}
+
+function updateResourceTile(resource, newSupplies) {
+  const resourceTile = document.querySelector(`.resource-tile[data-resource="${resource.toLowerCase()}"]`);
+  const progressBar = resourceTile.querySelector('.progress');
+  const progressText = resourceTile.querySelector('.resource-info p');
+
+  let progressColor;
+  let progressWidth = (newSupplies / 100) * 100;
+
+  if (newSupplies >= 51) {
+    progressColor = 'green';
+  } else if (newSupplies >= 21) {
+    progressColor = 'orange';
+  } else {
+    progressColor = 'red';
+  }
+
+  progressBar.style.width = `${progressWidth}%`;
+  progressBar.style.backgroundColor = progressColor;
+
+  let resourceUnit;
+  switch(resource) {
+    case 'Food':
+      resourceUnit = 'Meals';
+      break;
+    case 'Water':
+      resourceUnit = 'Liters';
+      break;
+    case 'Shelter':
+      resourceUnit = 'Beds';
+      break;
+    case 'Medical':
+      resourceUnit = 'Medicines';
+      break;
+    default:
+      resourceUnit = 'Units';
+  }
+
+  progressText.textContent = `${newSupplies} ${resourceUnit} Available`;
+}
+
+function requestResource(resource) {
+  window.location.href = `request_resources.html?resource=${resource}`;
+}
+
+request_resources.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Request Resources - Nexus</title>
+  <link rel="stylesheet" href="request_resources.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <header>
+    <img src="logo.png" alt="Nexus Logo" class="logo">
+    <h1>Nexus</h1>
+  </header>
+  <main>
+    <section class="category-section">
+      <h2 style="color:white;">Select Resource Category</h2>
+      <div class="categories">
+        <button class="category-button" id="Food">
+          <img src="food.png" alt="Food">
+          <p>Food</p>
+        </button>
+        <button class="category-button" id="Water">
+          <img src="water.png" alt="Water">
+          <p>Water</p>
+        </button>
+        <button class="category-button" id="Shelter">
+          <img src="Bed.png" alt="Shelter">
+          <p>Shelter</p>
+        </button>
+        <button class="category-button" id="Medical">
+          <img src="Medical Aid.png" alt="Medical Aid">
+          <p>Medical Aid</p>
+        </button>
+      </div>
+    </section>
+    <section class="details-section">
+      <label for="quantity"><h7 style="color:white;">Quantity:</h7></label>
+      <input type="number" id="quantity" name="quantity" min="1" placeholder="Enter quantity" required>
+
+      <label for="urgency"><h7 style="color:white;">Urgency:</h7></label>
+      <select id="urgency" name="urgency" required>
+        <option value="" disabled selected>Select urgency</option>
+        <option value="urgent">Urgent</option>
+        <option value="moderate">Moderate</option>
+        <option value="non-urgent">Non-Urgent</option>
+      </select>
+
+      <label for="name"><h7 style="color:white;">Name:</h7></label>
+      <input type="text" id="name" name="name" placeholder="Enter your name" required>
+
+      <label for="contact"><h7 style="color:white;">Contact Number:</h7></label>
+      <input type="tel" id="contact" name="contact" placeholder="Enter your contact number" required>
+    </section>
+    <button class="submit-button" disabled>Submit Request</button>
+  </main>
+  <footer>
+    <button class="footer-btn" id="home" onclick="location.href='home.html'"><i class="fas fa-home"></i></button>
+    <button class="footer-btn" id="requestResources" onclick="location.href='request_resources.html'"><i class="fas fa-hand-holding-heart"></i></button>
+    <button class="footer-btn" id="realTimeMap" onclick="location.href='real_time_map.html'"><i class="fas fa-map-marked-alt"></i></button>
+    <button class="footer-btn" id="chat" onclick="location.href='group_chat.html'"><i class="fas fa-comments"></i></button>
+    <button class="footer-btn" id="emergencyContact" onclick="location.href='resources.html'"><i class="fas fa-phone-alt"></i></button>
+  </footer>
+
+  <div id="popup-screen" class="popup-screen">
+    <div class="popup-content">
+      <img src="popup_image.jpg" alt="Popup Image" class="popup-image">
+      <p id="popup-message"></p>
+      <button id="close-popup-btn">Close</button>
+    </div>
+  </div>
+
+  <script src="request_resources.js"></script>
+</body>
+</html>
+
+request_resources.js
+document.addEventListener('DOMContentLoaded', () => {
+  const categoryButtons = document.querySelectorAll('.category-button');
+  const quantityInput = document.getElementById('quantity');
+  const urgencySelect = document.getElementById('urgency');
+  const nameInput = document.getElementById('name');
+  const contactInput = document.getElementById('contact');
+  const submitButton = document.querySelector('.submit-button');
+  let selectedCategories = [];
+
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const preSelectedResource = urlParams.get('resource');
+  if (preSelectedResource) {
+    const button = document.getElementById(preSelectedResource);
+    if (button) {
+      button.classList.add('active');
+      selectedCategories.push(preSelectedResource);
+    }
+  }
+
+  function validateForm() {
+    if (selectedCategories.length > 0 && quantityInput.value && urgencySelect.value && nameInput.value && validateContact(contactInput.value)) {
+      submitButton.disabled = false;
+    } else {
+      submitButton.disabled = true;
+    }
+  }
+
+  categoryButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      if (button.classList.contains('active')) {
+        button.classList.remove('active');
+        selectedCategories = selectedCategories.filter(category => category !== button.id);
+      } else {
+        button.classList.add('active');
+        selectedCategories.push(button.id);
+      }
+      validateForm();
+    });
+  });
+
+  quantityInput.addEventListener('input', validateForm);
+  urgencySelect.addEventListener('change', validateForm);
+  nameInput.addEventListener('input', validateForm);
+  contactInput.addEventListener('input', validateForm);
+
+  submitButton.addEventListener('click', async () => {
+    const quantity = parseInt(quantityInput.value);
+    const urgency = urgencySelect.value;
+    const name = nameInput.value;
+    const contact = contactInput.value;
+    const location = await getCurrentLocation();
+
+    const requestData = {
+      categories: selectedCategories,
+      quantity,
+      urgency,
+      name,
+      contact,
+      location
+    };
+
+    console.log('Request Data:', requestData);
+
+    // Update resource quantities
+    selectedCategories.forEach(category => {
+      let currentSupply = parseInt(localStorage.getItem(category)) || 100;
+      currentSupply = Math.max(0, currentSupply - quantity);
+      localStorage.setItem(category, currentSupply.toString());
+    });
+
+    showPopupMessage(requestData);
+  });
+
+  function validateContact(contact) {
+    const contactRegex = /^[0-9]{10}$/;
+    return contactRegex.test(contact);
+  }
+
+  contactInput.addEventListener('input', function () {
+    this.value = this.value.replace(/[^0-9]/g, '');
+  });
+
+  function showPopupMessage(requestData) {
+    const popupScreen = document.getElementById('popup-screen');
+    const popupMessage = document.getElementById('popup-message');
+
+    let message = `Request Submitted!<br><br>`;
+    requestData.categories.forEach(category => {
+      message += `You've successfully requested ${category} (Quantity: ${requestData.quantity}).<br>`;
+    });
+    message += `<br>Your location has been recorded.<br><br>We expect to deliver your supplies within approximately 10 mins. This is an estimate and may vary depending on resource availability and current conditions.`;
+
+    popupMessage.innerHTML = message;
+    popupScreen.style.display = 'flex';
+
+    document.getElementById('close-popup-btn').addEventListener('click', function () {
+      popupScreen.style.display = 'none';
+      location.href = 'home.html';
+    });
+  }
+
+  async function getCurrentLocation() {
+    return new Promise((resolve, reject) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+          resolve({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          });
+        }, () => {
+          resolve(null);
+        });
+      } else {
+        resolve(null);
+      }
+    });
+  }
+
+  validateForm();
+});
+
+document.getElementById('home').addEventListener('click', () => {
+  window.location.href = 'home.html';
+});
+
+donate_now.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donate Now</title>
+    <link rel="stylesheet" href="donate_now.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <img src="logo.png" alt="Nexus Logo" class="logo">
+        <h1>Nexus</h1>
+    </header>
+    <main>
+        <section class="donation-header">
+            <h2>Donate to Disaster Relief</h2>
+            <div class="secure-indicator">
+                <i class="fas fa-lock"></i> Secure Connection
+            </div>
+        </section>
+        <section class="donation-direction">
+    <h3>Choose How You Want to Donate</h3>
+    <div class="organizations-carousel">
+        <div class="organization">
+            <input type="radio" id="org1" name="organization" value="APSDMA">
+            <label for="org1">
+                <img src="NGO1.png" alt="NGO 1">
+                <div class="organization-info">
+                    <h4>APSDMA</h4>
+                    <p>Focus: Food Distribution</p>
+                    <a href="https://apsdma.ap.gov.in/" target="_blank">More Info</a>
+                </div>
+            </label>
+        </div>
+        <div class="organization">
+            <input type="radio" id="org2" name="organization" value="Rapid Response">
+            <label for="org2">
+                <img src="NGO2.png" alt="NGO 2">
+                <div class="organization-info">
+                    <h4>Rapid Response</h4>
+                    <p>Focus: Disaster Relief</p>
+                    <a href="https://www.rapidresponse.org.in/" target="_blank">More Info</a>
+                </div>
+            </label>
+        </div>
+        <!-- Add more organizations as needed -->
+    </div>
+        </section>
+        <section class="donation-form">
+            <div class="donation-amount">
+                <h3>Donation Amount</h3>
+                <div class="preset-amounts">
+                    <button class="amount-btn" data-amount="25">$25</button>
+                    <button class="amount-btn" data-amount="50">$50</button>
+                    <button class="amount-btn" data-amount="100">$100</button>
+                </div>
+                <div class="custom-amount">
+                    <label for="custom-amount">Custom Amount:</label>
+                    <input type="number" id="custom-amount" placeholder="Enter amount">
+                </div>
+            </div>
+            <div class="donation-designation">
+                <label for="designation">Donation Designation (Optional):</label>
+                <select id="designation">
+                    <option value="general">General Fund</option>
+                    <option value="food">Food</option>
+                    <option value="water">Water</option>
+                    <option value="shelter">Shelter</option>
+                    <option value="medical">Medical Aid</option>
+                </select>
+            </div>
+            <div class="donation-frequency">
+                <label>Donation Frequency:</label>
+                <div class="frequency-options">
+                    <label><input type="radio" name="frequency" value="one-time" checked> One-Time</label>
+                    <label><input type="radio" name="frequency" value="recurring"> Recurring</label>
+                </div>
+            </div>
+            <div class="donor-details">
+                <h3>Donor Information</h3>
+                <div class="donor-field">
+                    <label for="donor-name">Name:</label>
+                    <input type="text" id="donor-name" placeholder="Enter your name">
+                </div>
+                <div class="donor-field">
+                    <label for="donor-contact">Contact Number:</label>
+                    <input type="text" id="donor-contact" placeholder="Enter your contact number">
+                </div>
+                <div class="donor-field">
+                    <label for="donor-email">Email ID:</label>
+                    <input type="email" id="donor-email" placeholder="Enter your email">
+                </div>
+            </div>
+            <div class="secure-payment">
+                <h3>Secure Payment</h3>
+                <img src="payments-icon.jpg" alt="Payment Methods" class="payment-icons">
+            </div>
+            <button id="donate-btn">Donate Now</button>
+        </section>
+        <section class="donation-info">
+            <a href="donation_info.html">How are donations used?</a>
+        </section>
+    </main>
+    <footer>
+        <button class="footer-btn" id="home" onclick="location.href='home.html'"><i class="fas fa-home"></i></button>
+        <button class="footer-btn" id="requestResources" onclick="location.href='request_resources.html'"><i class="fas fa-hand-holding-heart"></i></button>
+        <button class="footer-btn" id="realTimeMap" onclick="location.href='real_time_map.html'"><i class="fas fa-map-marked-alt"></i></button>
+        <button class="footer-btn" id="chat" onclick="location.href='group_chat.html'"><i class="fas fa-comments"></i></button>
+        <button class="footer-btn" id="emergencyContact" onclick="location.href='resources.html'"><i class="fas fa-phone-alt"></i></button>
+    </footer>
+    <div class="popup" id="thank-you-popup">
+        <div class="popup-content">
+            <img src="popup_image.jpg" alt="Thank You">
+            <h2>Thank You for Your Donation!</h2>
+            <p>Your generous contribution helps us provide crucial resources to those in need. You will receive the receipt via email within 48 hours.</p>
+            <button id="close-popup-btn">Close</button>
+        </div>
+    </div>
+    <script src="donate_now.js"></script>
+</body>
+</html>
+
+donate_now.js
+document.querySelectorAll('.amount-btn').forEach(button => {
+  button.addEventListener('click', function () {
+      document.getElementById('custom-amount').value = this.getAttribute('data-amount');
+  });
+});
+
+// Handle donation submission
+document.getElementById('donate-btn').addEventListener('click', function () {
+  submitDonation();
+});
+
+function submitDonation() {
+  const amount = document.getElementById('custom-amount').value;
+  const designation = document.getElementById('designation').value;
+  const frequency = document.querySelector('input[name="frequency"]:checked').value;
+  const name = document.getElementById('donor-name').value;
+  const contact = document.getElementById('donor-contact').value;
+  const email = document.getElementById('donor-email').value;
+
+  if (!amount || amount <= 0) {
+      alert('Please enter a valid donation amount.');
+      return;
+  }
+
+  if (!name || !contact || !email) {
+      alert('Please fill in all the required donor information.');
+      return;
+  }
+
+  // Simulate donation submission
+  setTimeout(() => {
+      // Show thank you popup
+      const thankYouPopup = document.getElementById('thank-you-popup');
+      thankYouPopup.querySelector('p').textContent = `You've successfully donated $${amount}. Your generous contribution helps us provide crucial resources to those in need. You will receive the receipt via email within 48 hours.`;
+      thankYouPopup.style.display = 'flex';
+  }, 500);
+}
+
+// Close the popup and redirect to home page
+document.getElementById('close-popup-btn').addEventListener('click', function () {
+  document.getElementById('thank-you-popup').style.display = 'none';
+  location.href = 'home.html';
+});
+
+volunteer_now.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volunteer Now</title>
+    <link rel="stylesheet" href="volunteer_now.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <img src="logo.png" alt="Nexus Logo" class="logo">
+        <h1>Nexus</h1>
+    </header>
+    <main>
+        <section class="volunteer-header">
+            <h2>Volunteer Now</h2>
+        </section>
+        <section class="user-details">
+            <h3>Your Details</h3>
+            <label for="name">Name:</label>
+            <input type="text" id="name" placeholder="Your Name">
+            <label for="contact">Contact Number:</label>
+            <input type="text" id="contact" placeholder="Your Contact Number">
+            <label for="location">Location:</label>
+            <input type="text" id="location" placeholder="Enter your location">
+            <button id="detect-location-btn">Auto-detect My Location</button>
+        </section>
+        <section class="volunteer-availability">
+    <h3>Volunteer Availability</h3>
+    <div id="specific-schedule">
+        <label>Select Available Days:</label>
+        <div class="days-selection">
+            <label><input type="checkbox" value="monday"> Monday</label>
+            <label><input type="checkbox" value="tuesday"> Tuesday</label>
+            <label><input type="checkbox" value="wednesday"> Wednesday</label>
+            <label><input type="checkbox" value="thursday"> Thursday</label>
+            <label><input type="checkbox" value="friday"> Friday</label>
+            <label><input type="checkbox" value="saturday"> Saturday</label>
+            <label><input type="checkbox" value="sunday"> Sunday</label>
+        </div>
+        <label for="available-times">Select Available Times:</label>
+        <input type="time" id="available-times" multiple>
+    </div>
+    <label>
+        <input type="checkbox" id="flexible-schedule"> Flexible Schedule
+    </label>
+</section>
+        <section class="skills-experience">
+            <h3>Skills & Experience</h3>
+            <div class="skills-selection">
+                <label><input type="checkbox" value="first-aid"> First Aid</label>
+                <label><input type="checkbox" value="construction"> Construction</label>
+                <label><input type="checkbox" value="communication"> Communication</label>
+                <label><input type="checkbox" value="logistics"> Logistics</label>
+            </div>
+            <div class="additional-skills">
+                <label for="additional-skills">Additional Skills:</label>
+                <textarea id="additional-skills" rows="3" placeholder="Describe any other skills or experience"></textarea>
+            </div>
+        </section>
+        <section class="volunteer-agreement">
+            <p>By signing up, you agree to our <a href="volunteer_agreement.html">Volunteer Agreement</a>.</p>
+        </section>
+        <section class="sign-up">
+            <button id="sign-up-btn">Sign Up to Volunteer</button>
+        </section>
+    </main>
+    <footer>
+        <button class="footer-btn" id="home" onclick="location.href='home.html'"><i class="fas fa-home"></i></button>
+        <button class="footer-btn" id="requestResources" onclick="location.href='request_resources.html'"><i class="fas fa-hand-holding-heart"></i></button>
+        <button class="footer-btn" id="realTimeMap" onclick="location.href='real_time_map.html'"><i class="fas fa-map-marked-alt"></i></button>
+        <button class="footer-btn" id="chat" onclick="location.href='group_chat.html'"><i class="fas fa-comments"></i></button>
+        <button class="footer-btn" id="emergencyContact" onclick="location.href='resources.html'"><i class="fas fa-phone-alt"></i></button>
+    </footer>
+    <div class="popup" id="thank-you-popup">
+        <div class="popup-content">
+            <img src="popup_image.jpg" alt="Thank You">
+            <h2>Thank You for Volunteering!</h2>
+            <p>We will contact you soon with more details.</p>
+            <button id="close-popup-btn">Close</button>
+        </div>
+    </div>
+    <script src="volunteer_now.js"></script>
+</body>
+</html>
+
+
+
+volunteer_now.js
+// Handle location detection
+document.getElementById('detect-location-btn').addEventListener('click', function () {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            document.getElementById('location').value = `Lat: ${position.coords.latitude}, Lon: ${position.coords.longitude}`;
+        }, function () {
+            alert('Unable to detect location');
+        });
+    } else {
+        alert('Geolocation not supported');
+    }
+});
+
+// Toggle specific schedule visibility based on flexible schedule checkbox
+document.getElementById('flexible-schedule').addEventListener('change', function () {
+    const specificSchedule = document.getElementById('specific-schedule');
+    if (this.checked) {
+        specificSchedule.style.display = 'none';
+    } else {
+        specificSchedule.style.display = 'block';
+    }
+});
+
+// Initially show the specific schedule
+document.getElementById('specific-schedule').style.display = 'block';// Handle volunteer sign up
+document.getElementById('sign-up-btn').addEventListener('click', function () {
+    const name = document.getElementById('name').value;
+    const contact = document.getElementById('contact').value;
+    const location = document.getElementById('location').value;
+    const skills = Array.from(document.querySelectorAll('.skills-selection input:checked')).map(input => input.value);
+    const additionalSkills = document.getElementById('additional-skills').value;
+
+    if (!name || !contact) {
+        alert('Please fill in your name and contact number.');
+        return;
+    }
+
+    if (skills.length === 0 && additionalSkills.trim() === '') {
+        alert('Please select or enter at least one skill.');
+        return;
+    }
+
+    // Simulate sign-up process
+    setTimeout(() => {
+        // Show thank you popup
+        const thankYouPopup = document.getElementById('thank-you-popup');
+        thankYouPopup.querySelector('p').textContent = `Thank you, ${name}. We will contact you soon with more details.`;
+        thankYouPopup.style.display = 'flex';
+    }, 500);
+});
+
+// Close the popup and redirect to home page
+document.getElementById('close-popup-btn').addEventListener('click', function () {
+    document.getElementById('thank-you-popup').style.display = 'none';
+    location.href = 'home.html';
+});
+
+
+admin_dashboard.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Admin Dashboard</title>
+    <link rel="stylesheet" href="admin_dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo-container">
+            <img src="logo.png" alt="Nexus Logo" class="logo">
+            <h1>Nexus</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#dashboard" class="nav-link active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="#requests" class="nav-link"><i class="fas fa-clipboard-list"></i> Requests</a></li>
+                <li><a href="#sos-requests" class="nav-link"><i class="fas fa-bell"></i> SOS Requests</a></li>
+                <li><a href="#donations" class="nav-link"><i class="fas fa-donate"></i> Donations</a></li>
+                <li><a href="#volunteers" class="nav-link"><i class="fas fa-hands-helping"></i> Volunteers</a></li>
+                <li><a href="#resources" class="nav-link"><i class="fas fa-boxes"></i> Resources</a></li>
+                <li><a href="#" id="logout" class="nav-link"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="main-content">
+        <header>
+            <div class="user-info">
+                <img src="user.png" alt="User Avatar" class="user-avatar">
+            </div>
+        </header>
+        <section id="dashboard" class="content-section active">
+            <div class="stats-cards">
+                <div class="card">
+                    <h3>60.5k</h3>
+                    <p>Requests Submitted</p>
+                </div>
+                <div class="card">
+                    <h3>150</h3>
+                    <p>Donations Received</p>
+                </div>
+                <div class="card">
+                    <h3>320</h3>
+                    <p>Volunteers Registered</p>
+                </div>
+                <div class="card">
+                    <h3>70</h3>
+                    <p>Resources Available</p>
+                </div>
+            </div>
+        </section>
+        <section id="requests" class="content-section">
+            <h2>Requests</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Request ID</th>
+                            <th>Request Type</th>
+                            <th>User Name</th>
+                            <th>Contact Number</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>001</td>
+                            <td>Food</td>
+                            <td>John Doe</td>
+                            <td>123-456-7890</td>
+                            <td>City A</td>
+                            <td>Pending</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <section id="sos-requests" class="content-section">
+            <h2>SOS Requests</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>SOS ID</th>
+                            <th>Location</th>
+                            <th>Video</th>
+                            <th>Audio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>001</td>
+                            <td>City B</td>
+                            <td><video controls width="250">
+                                    <source src="sos_video.mp4" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </td>
+                            <td><audio controls>
+                                    <source src="sos_audio.mp3" type="audio/mp3">
+                                    Your browser does not support the audio element.
+                                </audio>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <section id="donations" class="content-section">
+            <h2>Donations</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Donor Name</th>
+                            <th>Donation Amount</th>
+                            <th>Donation Date</th>
+                            <th>Designation</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Jane Smith</td>
+                            <td>$100</td>
+                            <td>2024-07-10</td>
+                            <td>Medical Supplies</td>
+                            <td>Processed</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <section id="volunteers" class="content-section">
+            <h2>Volunteers</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Volunteer Name</th>
+                            <th>Location</th>
+                            <th>Skills and Experience</th>
+                            <th>Availability</th>
+                            <th>Emergency Contact</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Mike Johnson</td>
+                            <td>City B</td>
+                            <td>First Aid</td>
+                            <td>Weekends</td>
+                            <td>987-654-3210</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+<section id="resources" class="content-section">
+    <h2>Resources</h2>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Resource ID</th>
+                    <th>Resource Name</th>
+                    <th>Category</th>
+                    <th>Quantity</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>R001</td>
+                    <td>Food</td>
+                    <td>Food Supplies</td>
+                    <td class="quantity">1000</td>
+                    <td>Available</td>
+                    <td><button class="add-supplies-btn" data-id="R001">Add Supplies</button></td>
+                </tr>
+                <tr>
+                    <td>R002</td>
+                    <td>Water Bottles</td>
+                    <td>Water Supplies</td>
+                    <td class="quantity">1000</td>
+                    <td>Available</td>
+                    <td><button class="add-supplies-btn" data-id="R002">Add Supplies</button></td>
+                </tr>
+                <tr>
+                    <td>R003</td>
+                    <td>Beds</td>
+                    <td>Shelter Supplies</td>
+                    <td class="quantity">1000</td>
+                    <td>Available</td>
+                    <td><button class="add-supplies-btn" data-id="R003">Add Supplies</button></td>
+                </tr>
+                <tr>
+                    <td>R004</td>
+                    <td>Medical Aid</td>
+                    <td>Medical Supplies</td>
+                    <td class="quantity">1000</td>
+                    <td>Available</td>
+                    <td><button class="add-supplies-btn" data-id="R004">Add Supplies</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>    
+    </div>
+
+    <div id="logoutModal" class="modal">
+        <div class="modal-content">
+            <h2>Confirm Logout</h2>
+            <p>Are you sure you want to logout?</p>
+            <button id="confirmLogout" class="btn">Yes</button>
+            <button id="cancelLogout" class="btn">No</button>
+        </div>
+    </div>
+
+    <script src="admin_dashboard.js"></script>
+</body>
+</html>
+
+admin_dashboard.js
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('click', function (e) {
+    e.preventDefault(); 
+    const targetSectionId = this.getAttribute('href').substring(1); 
+    document.querySelectorAll('.content-section').forEach(section => {
+      section.classList.remove('active');
+      if (section.id === 'dashboard' || section.id === targetSectionId) {
+        section.classList.add('active');
+      }
+    });
+    document.querySelectorAll('.nav-link').forEach(nav => {
+      nav.classList.remove('active');
+    });
+    link.classList.add('active');
+  });
+});
+document.querySelectorAll('.add-supplies-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        const resourceId = this.getAttribute('data-id');
+        const quantityCell = this.closest('tr').querySelector('.quantity');
+        const currentQuantity = parseInt(quantityCell.textContent);
+        
+        // Prompt user for the amount to add
+        const amountToAdd = parseInt(prompt('Enter the amount of supplies to add:'));
+        
+        if (!isNaN(amountToAdd) && amountToAdd > 0) {
+            const newQuantity = currentQuantity + amountToAdd;
+            quantityCell.textContent = newQuantity;
+            alert(`Successfully added ${amountToAdd} supplies to ${resourceId}. New total: ${newQuantity}`);
+        } else {
+            alert('Invalid input. Please enter a positive number.');
+        }
+    });
+});
+
+document.getElementById('dashboard').classList.add('active');
+document.getElementById('logout').addEventListener('click', function () {
+    document.getElementById('logoutModal').style.display = 'flex';
+});
+
+document.getElementById('confirmLogout').addEventListener('click', function () {
+    window.location.href = 'login.html';
+});
+
+document.getElementById('cancelLogout').addEventListener('click', function () {
+    document.getElementById('logoutModal').style.display = 'none';
+});
+
+
+
+

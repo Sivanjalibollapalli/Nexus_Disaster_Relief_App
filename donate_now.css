@@ -1,0 +1,268 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: url('background.jpeg') no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    position: fixed; 
+    top: 0;
+    width: 100%; 
+    z-index: 1000;    
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    color: white;
+}
+
+header .logo {
+    height: 40px;
+    margin-right: 10px;
+}
+
+header h1 {
+    font-size: 24px;
+}
+
+main {
+    margin-top: 60px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    margin-bottom: 40px;
+}
+
+.donation-header {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.donation-header h2 {
+    margin: 0 0 10px 0;
+}
+
+.secure-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: green;
+    font-size: 16px;
+}
+
+.secure-indicator i {
+    margin-right: 5px;
+}
+
+.donation-direction {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.donation-direction h3 {
+    margin-bottom: 20px;
+}
+
+.organizations-carousel {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+}
+
+.organization {
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    flex: 0 0 200px;
+    text-align: center;
+}
+
+.organization img {
+    width: 100%;
+    height: 100px;
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+.organization-info h4 {
+    margin: 10px 0 5px 0;
+}
+
+.organization-info p {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.organization-info a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.donation-form {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.donation-amount, .donation-designation, .donation-frequency, .secure-payment, .donor-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.donation-amount h3, .secure-payment h3, .donor-details h3 {
+    margin: 0 0 10px 0;
+}
+
+.preset-amounts {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.amount-btn {
+    flex: 1;
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.custom-amount input, #designation, .donor-field input {
+    width: 98%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.frequency-options {
+    display: flex;
+    gap: 10px;
+}
+
+.payment-icons {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+#donate-btn {
+    padding: 15px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 18px;
+    margin-top: 20px;
+}
+
+.donation-info a {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #007BFF;
+    text-decoration: none;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px 0;
+    justify-content: space-around;
+}
+
+.footer-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+.footer-btn i {
+    font-size: 24px;
+}
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    position: relative;
+}
+
+.popup-content img {
+    width: 100px;
+    margin-bottom: 20px;
+}
+
+.popup-content h2 {
+    margin-bottom: 10px;
+}
+
+.popup-content p {
+    margin-bottom: 20px;
+}
+
+#close-popup-btn {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 20px;
+    }
+
+    .donation-direction, .donation-form {
+        padding: 10px;
+    }
+
+    .organization {
+        flex: 0 0 150px;
+    }
+
+    #donate-btn {
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    .popup-content img {
+        width: 80px;
+    }
+}

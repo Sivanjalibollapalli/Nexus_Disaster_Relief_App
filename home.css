@@ -1,0 +1,238 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: url('background.jpeg') no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+position: fixed; top: 0; width: 100%; z-index: 1000;    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    background: 000000;
+    color: white;
+}
+
+header .logo {
+    height: 35px;
+    margin-right: 10px;
+}
+
+header h1 {
+    font-size: 24px;
+    margin: 0;
+}
+
+
+
+.alert-banner {
+  background: 000000;
+  color: red;
+  text-align: center;
+  padding: 10px;
+  font-weight: bold;
+  overflow: hidden;
+}
+
+.scrolling-text {
+  white-space: nowrap;
+  animation: scroll-left 20s linear infinite;
+}
+
+@keyframes scroll-left {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+.sos-btn {
+    display: block;
+    margin: 10px auto;
+    width: 100px;
+    height: 100px;
+    background: red;
+    color: white;
+    font-size: 24px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+main {
+margin-bottom: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.main-content {
+    width: 100%;
+    max-width: 1200px;
+    text-align: center;
+}
+
+.alert-red{
+margin-bottom: 20px;
+}
+.critical-needs, .hero-donate {
+    margin-bottom: 20px;
+}
+
+.critical-needs h2, .hero-donate h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.resource-overview {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.resource-tile {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    flex: 1 1 200px;
+    margin: 10px;
+}
+
+.resource-tile h3 {
+    margin-top: 0;
+}
+
+.resource-icon {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 10px;
+    background-size: cover;
+}
+
+.food-icon {
+    background: url('food.png') no-repeat center center;
+    background-size: cover;
+}
+
+.water-icon {
+    background: url('water.png') no-repeat center center;
+    background-size: cover;
+}
+
+.shelter-icon {
+    background: url('Bed.png') no-repeat center center;
+    background-size: cover;
+}
+
+.medical-icon {
+    background: url('Medical Aid.png') no-repeat center center;
+    background-size: cover;
+}
+
+.resource-info {
+    margin: 10px 0;
+}
+
+.progress-bar {
+    background: #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 10px 0;
+    height: 20px;
+}
+
+.progress {
+    background: green;
+    height: 100%;
+    transition: width 0.3s;
+}
+
+.action-btn, .volunteer-btn, .donate-btn {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    margin: 10px auto;
+    display: block;
+    width: 150px;
+}
+
+.action-btn:hover, .volunteer-btn:hover, .donate-btn:hover {
+    background-color: #0056b3;
+}
+
+footer {
+
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+}
+
+.footer-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    
+}
+.footer-btn i {
+    font-size: 24px;
+}
+/* Media Queries */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 20px;
+    }
+
+    .action-btn, .volunteer-btn, .donate-btn {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+
+    .resource-overview {
+        flex-direction: column;
+    }
+    
+    .resource-tile {
+        padding: 10px;
+    }
+
+    footer {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 480px) {
+    .resource-tile {
+        padding: 5px;
+        margin: 5px;
+    }
+
+    .resource-icon {
+        width: 30px;
+        height: 30px;
+    }
+
+    .sos-btn {
+        width: 80px;
+        height: 80px;
+        font-size: 18px;
+    }
+}

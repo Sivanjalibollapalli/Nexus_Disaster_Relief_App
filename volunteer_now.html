@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volunteer Now</title>
+    <link rel="stylesheet" href="volunteer_now.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <img src="logo.png" alt="Nexus Logo" class="logo">
+        <h1>Nexus</h1>
+    </header>
+    <main>
+        <section class="volunteer-header">
+            <h2>Volunteer Now</h2>
+        </section>
+        <section class="user-details">
+            <h3>Your Details</h3>
+            <label for="name">Name:</label>
+            <input type="text" id="name" placeholder="Your Name">
+            <label for="contact">Contact Number:</label>
+            <input type="text" id="contact" placeholder="Your Contact Number">
+            <label for="location">Location:</label>
+            <input type="text" id="location" placeholder="Enter your location">
+            <button id="detect-location-btn">Auto-detect My Location</button>
+        </section>
+        <section class="volunteer-availability">
+            <h3>Volunteer Availability</h3>
+            <div id="specific-schedule">
+                <label>Select Available Days:</label>
+                <div class="days-selection">
+                    <label><input type="checkbox" value="Monday"> Monday</label>
+                    <label><input type="checkbox" value="Tuesday"> Tuesday</label>
+                    <label><input type="checkbox" value="Wednesday"> Wednesday</label>
+                    <label><input type="checkbox" value="Thursday"> Thursday</label>
+                    <label><input type="checkbox" value="Friday"> Friday</label>
+                    <label><input type="checkbox" value="Saturday"> Saturday</label>
+                    <label><input type="checkbox" value="Sunday"> Sunday</label>
+                </div>
+                <label for="available-times">Select Available Times:</label>
+                <input type="time" id="available-times">
+            </div>
+            <label>
+                <input type="checkbox" id="flexible-schedule"> Flexible Schedule
+            </label>
+        </section>
+        <section class="skills-experience">
+            <h3>Skills & Experience</h3>
+            <div class="skills-selection">
+                <label><input type="checkbox" value="First Aid"> First Aid</label>
+                <label><input type="checkbox" value="Construction"> Construction</label>
+                <label><input type="checkbox" value="Communication"> Communication</label>
+                <label><input type="checkbox" value="Logistics"> Logistics</label>
+            </div>
+            <div class="additional-skills">
+                <label for="additional-skills">Additional Skills:</label>
+                <textarea id="additional-skills" rows="3" placeholder="Describe any other skills or experience"></textarea>
+            </div>
+        </section>
+        <section class="volunteer-agreement">
+            <p>By signing up, you agree to our <a href="volunteer_agreement.html">Volunteer Agreement</a>.</p>
+        </section>
+        <section class="sign-up">
+            <button id="sign-up-btn">Sign Up to Volunteer</button>
+        </section>
+    </main>
+    <footer>
+        <button class="footer-btn" id="home" onclick="location.href='home.html'"><i class="fas fa-home"></i></button>
+        <button class="footer-btn" id="requestResources" onclick="location.href='request_resources.html'"><i class="fas fa-hand-holding-heart"></i></button>
+        <button class="footer-btn" id="realTimeMap" onclick="location.href='real_time_map.html'"><i class="fas fa-map-marked-alt"></i></button>
+        <button class="footer-btn" id="chat" onclick="location.href='group_chat.html'"><i class="fas fa-comments"></i></button>
+        <button class="footer-btn" id="emergencyContact" onclick="location.href='resources.html'"><i class="fas fa-phone-alt"></i></button>
+    </footer>
+    <div class="popup" id="thank-you-popup">
+        <div class="popup-content">
+            <img src="popup_image.jpg" alt="Thank You">
+            <h2>Thank You for Volunteering!</h2>
+            <p>We will contact you soon with more details.</p>
+            <button id="close-popup-btn">Close</button>
+        </div>
+    </div>
+    <script src="volunteer_now.js"></script>
+</body>
+</html>
